@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Índices hipotéticos no PostgreSQL - Comunidade Brasileira de PostgreSQL</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="/images/favicon.ico" rel="icon">
+
+<link rel="canonical" href="/indices-hipoteticos-no-postgresql.html">
+
+        <meta name="author" content="anacrl" />
+        <meta name="description" content="Apresentamos nos eventos PostgreSQL, tanto da comunidade brasileira (PgConBR 2009 - Campinas/SP) como internacional (PGCon 2010 - Ottawa/Canada), uma extensão ao SGBD PostgreSQL que disponibiliza novos comandos para a simulação da presença de índices na base de dados, visando estudos práticos de desempenho. A receptividade nos dois eventos foi muito …" />
+
+        <meta property="og:site_name" content="Comunidade Brasileira de PostgreSQL" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Índices hipotéticos no PostgreSQL"/>
+        <meta property="og:url" content="/indices-hipoteticos-no-postgresql.html"/>
+        <meta property="og:description" content="Apresentamos nos eventos PostgreSQL, tanto da comunidade brasileira (PgConBR 2009 - Campinas/SP) como internacional (PGCon 2010 - Ottawa/Canada), uma extensão ao SGBD PostgreSQL que disponibiliza novos comandos para a simulação da presença de índices na base de dados, visando estudos práticos de desempenho. A receptividade nos dois eventos foi muito …"/>
+        <meta property="article:published_time" content="2011-02-10" />
+            <meta property="article:section" content="Início" />
+            <meta property="article:author" content="anacrl" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+        <link href="/css/custom.css" rel="stylesheet">
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="/images/logo.png" width="64x64"/> Comunidade Brasileira de PostgreSQL            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="../category/inicio.html">Início</a></li>
+                    <li><a href="../pages/sobre-o-postgresql.html">Sobre</a></li>
+                    <li><a href="../pages/downloads.html">Downloads</a></li>
+                    <li><a href="../pages/documentacao.html">Documentação</a></li>
+                    <li><a href="../category/eventos.html">Eventos</a></li>
+                    <li><a href="../pages/suporte.html">Suporte</a></li>
+                    <li><a href="../pages/participe.html">Participe!</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/indices-hipoteticos-no-postgresql.html"
+                       rel="bookmark"
+                       title="Permalink to Índices hipotéticos no PostgreSQL">
+                        Índices hipotéticos no PostgreSQL
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2011-02-10T15:53:00-02:00"> 10/02/2011 15:53</time>
+    </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="/author/anacrl.html"><i class="fa fa-user"></i> anacrl</a>
+
+
+
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Apresentamos nos eventos PostgreSQL, tanto da comunidade brasileira (PgConBR 2009 - Campinas/SP) como internacional (PGCon 2010 - Ottawa/Canada), uma extensão ao SGBD PostgreSQL que disponibiliza novos comandos para a simulação da presença de índices na base de dados, visando estudos práticos de desempenho.</p>
+<p>A receptividade nos dois eventos foi muito boa, havendo solicitações para download e disponibilização do material desenvolvido. Criamos um projeto SourceForge (<a href="http://sourceforge.net/projects/hypotheticalind/">http://sourceforge.net/projects/hypotheticalind/</a>), disponibilizando a extensão em diferentes versões do SGBD juntamente com um tutorial de utilização contendo exemplos para índices hipotéticos.</p>
+<p>Cabe observar que o conceito de indices hipotéticos foi proposto em 1992 por Frank, Omiecinski e Navathe (<a href="http://www.springerlink.com/content/d4327448p5342880/">http://www.springerlink.com/content/d4327448p5342880/</a>). Os indices hipotéticos são estruturas de índices virtuais, ou seja, existentes somente no catálogo do banco de dados. Como não existem fisicamente, são estruturas que não podem ser utilizadas para responder consultas. Entretanto, indices hipotéticos permitem simulações do tipo what-if, viabilizando estudos de desempenho para descobrir qual seria o plano de execução gerado pelo otimizador de consultas no caso de que os indices hipotéticos fossem, na verdade, índices reais e persistissem fisicamente. Consequentemente, pode-se identificar quais indices melhorariam o desempenho de uma consulta sem o custo da efetiva criação destes índices em ambiente de produção. Esta é uma Funcionalidade extremamente importante para DBAs e analistas responsáveis pelos ajustes finos de desempenho (tuning) do banco de dados.</p>
+<p>Nosso grupo de pesquisa na PUC-Rio estendeu o SGBD PostgreSQL a fim de incluir a noção de índices hipotéticos. Foram introduzidos três novos comandos:</p>
+<ul>
+<li><strong>create hypothetical index</strong>;</li>
+<li><strong>drop hypothetical index</strong>;</li>
+<li><strong>explain hypothetical</strong>.</li>
+</ul>
+<p>O primeiro comando permite a criação de índices exclusivamente na metabase, com os dados estatísticos respectivos obtidos através de heurísticas desenvolvidas especificamente. O comando drop retira do catálogo o índice hipotético criado e o terceiro comando, explain hypothetical, deve ser usado ao invés do explain tradicional para que o processador de consultas do PostgreSQL leve em consideração a existência de índices hipotéticos no momento da otimização e geração de planos.</p>
+<p>A seguir, seguem alguns depoimentos após a divulgação do projeto SourceForge na lista de discussão da comunidade PostgreSQL internacional:</p>
+<ul>
+<li>Wiki da libpqxx (API C++ para postgreSQL): <a href="http://pqxx.org/development/libpqxx/wiki/HypotheticalIndexes">http://pqxx.org/development/libpqxx/wiki/HypotheticalIndexes</a></li>
+<li>“Great to see this being available finally!” --Josh Berkus</li>
+<li>"I believe they're for performance testing. Add hypothetical index (takes very little time). Check estimated costs with EXPLAIN. If good, add real index (takes lots of time)" --Richard Huxton</li>
+<li>“That sounds very useful indeed!” --Jeroen Vermeulen</li>
+</ul>
+<p>Maiores informações, apresentações, outros artigos técnicos, vejam na Página PostgreSQL do grupo de pesquisa na PUC-Rio: <a href="http://www.inf.puc-rio.br/~postgresql/">http://www.inf.puc-rio.br/~postgresql/</a></p>
+<p>Sérgio Lifschitz / Ana Carolina</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2013 admin
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>
