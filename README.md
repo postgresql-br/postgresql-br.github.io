@@ -33,7 +33,15 @@ Construirá o conteúdo estático e iniciará um servidor web local na porta 800
 
     make stopserver
 
-### 7) Orientações Gerais
+### 7) Colocar conteúdo estático no gh-pages
+
+Após compilar com `make html`, o conteúdo estático estará na pasta `output`. É possível incluir apenas essa pasta no branch `gh-pages`:
+
+    git add output
+    git commit -m 'Alterando conteúdo estático'
+    git subtree push --prefix output origin gh-pages
+
+### 8) Orientações Gerais
 
 Artigos são escritos em formato MD e ficam na pasta `content`.
 
